@@ -2,7 +2,7 @@
     <plugin-info>
         <description>${pom.description}</description>
         <version>${pom.version}</version>
-        <application-version min="4.3" max="4.3"/>
+        <application-version min="6.2" max="6.2"/>
         <vendor name="${pom.organization.name}" url="${pom.organization.url}" />
     </plugin-info>
 	

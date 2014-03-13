@@ -27,7 +27,7 @@
     <dependencies>
        <dependency>
             <groupId>com.atlassian.jira</groupId>
-            <artifactId>atlassian-jira</artifactId>
+            <artifactId>jira-api</artifactId>
             <version>${jira.version}</version>
             <scope>provided</scope>
         </dependency>        
@@ -67,6 +67,12 @@
 		    <version>2.3</version>
 		    <scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.atlassian.seraph</groupId>
+			<artifactId>atlassian-seraph</artifactId>
+			<version>2.6.0</version>
+            <scope>provided</scope>
+		</dependency>
 	</dependencies>
 
     <build>
@@ -93,8 +99,8 @@
 
     
     <properties>
-        <jira.version>4.3</jira.version>
-        <jira.data.version>4.3</jira.data.version>
+        <jira.version>6.2</jira.version>
+        <jira.data.version>6.2</jira.data.version>
     </properties>
 	
 	<scm>
@@ -110,6 +116,4 @@
 			<url>dav:https://nexus.valiantys.com/content/repositories/releases/</url>
 		</repository>
 	</distributionManagement>
-
-
 </project>

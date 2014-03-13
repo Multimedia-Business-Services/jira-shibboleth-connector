@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,8 +17,7 @@ import com.atlassian.crowd.embedded.api.CrowdService;
 import com.atlassian.crowd.exception.FailedAuthenticationException;
 import com.atlassian.crowd.exception.runtime.CommunicationException;
 import com.atlassian.crowd.exception.runtime.OperationFailedException;
-import com.atlassian.jira.ComponentManager;
-import com.atlassian.jira.user.util.OSUserConverter;
+import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.seraph.auth.AuthenticationErrorType;
 import com.atlassian.seraph.auth.AuthenticatorException;
 import com.atlassian.seraph.auth.DefaultAuthenticator;
@@ -128,7 +126,7 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 	 * no user exists.
 	 */
 	protected Principal getUser(String username) {
-		return OSUserConverter.convertToOSUser(getCrowdService().getUser(username));
+		return getCrowdService().getUser(username);
 	}
 
 	/**
@@ -138,7 +136,7 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 	 *         Container.
 	 */
 	private CrowdService getCrowdService() {
-		return ComponentManager.getComponent(CrowdService.class);
+		return ComponentAccessor.getCrowdService();
 	}
 
 	private Properties initProperties(String configurationFile) throws IOException {
