@@ -1,14 +1,15 @@
-<atlassian-plugin key="${pom.groupId}.${pom.artifactId}" name="${pom.name}">
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}">
+
     <plugin-info>
-        <description>${pom.description}</description>
-        <version>${pom.version}</version>
-        <application-version min="6.2" max="6.2"/>
-        <vendor name="${pom.organization.name}" url="${pom.organization.url}" />
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
     </plugin-info>
-	
+
 	<servlet name="Shibboleth logout servlet" key="shibboleth.logout" class="com.valiantys.atlassian.features.shibboleth.LogoutServlet">
-        <description>Shibboleth logout servlet. The aim of this servlet is to clear the jira session and return the response to the shibboleth server</description>
         <url-pattern>/ShibbolethLogout</url-pattern>
     </servlet>
-      
+    
 </atlassian-plugin>
