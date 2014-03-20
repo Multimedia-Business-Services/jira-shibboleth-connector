@@ -7,9 +7,4 @@
         <param name="plugin-icon">images/pluginIcon.png</param>
         <param name="plugin-logo">images/pluginLogo.png</param>
     </plugin-info>
-
-	<servlet name="Shibboleth logout servlet" key="shibboleth.logout" class="com.valiantys.atlassian.features.shibboleth.LogoutServlet">
-        <url-pattern>/ShibbolethLogout</url-pattern>
-    </servlet>
-    
 </atlassian-plugin>

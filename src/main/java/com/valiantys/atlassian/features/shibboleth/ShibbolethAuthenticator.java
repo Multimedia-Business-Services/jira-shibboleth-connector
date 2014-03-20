@@ -19,11 +19,8 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 
 	@Override
 	public Principal getUser(HttpServletRequest request, HttpServletResponse response) {
-		request.setAttribute("uid", "admin");
-
 		if (!userIsAlreadyLogged(request) && !urlIsSkipped(request)) {
-			SSOnShibboleth sso = SSOnShibboleth.newInstance(request);
-			String username = sso.getUid();
+			String username = request.getRemoteUser();
 			if (username != null) {
 				Principal user = getUser(username);
 				putPrincipalInSessionContext(request, user);
@@ -52,7 +49,12 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 	}
 
 	private boolean urlIsSkipped(HttpServletRequest request) {
-		return SKIPPED_URLS.contains(request.getRequestURL().toString());
+		for (String skippedUrl : SKIPPED_URLS) {
+			if (request.getRequestURL().toString().contains(skippedUrl)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static boolean userIsAlreadyLogged(HttpServletRequest request) {
@@ -60,5 +62,5 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 	}
 
 	private final static long serialVersionUID = 1492747625496115491L;
-	private final static List<String> SKIPPED_URLS = Arrays.asList("security-tokens", "/ShibbolethLogout", "/logout");
+	private final static List<String> SKIPPED_URLS = Arrays.asList("security-tokens", "/Shibboleth.sso/Logout", "/logout");
 }
