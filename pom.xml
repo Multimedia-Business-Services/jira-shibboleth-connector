@@ -58,4 +58,5 @@
 		<url>http://git.si.mbs/si/jira-shibboleth-connector/tree/master</url>
 	</scm>
 	<name>Authentification shibboleth pour JIRA</name>
+	<description>Ceci est un connecteur Jira 6.x permettant de déléguer l'autentification applicative au SSO Shibboleth.</description>
 </project>
