@@ -43,7 +43,7 @@ atlas-package
 
 ### Configuration du SP Shibboleth
 
-- Pour que Shibboleth renseigne le REMOTE_USER dans le Request, il faut cobnfigurer son mapping de champ dans le fichier Shibbolet2.xml : 
+- Pour que Shibboleth renseigne le REMOTE_USER dans le Request, il faut configurer son mapping de champ dans le fichier Shibbolet2.xml : 
 
 ```xml
 <ApplicationDefaults ... REMOTE_USER="uid" ... >
