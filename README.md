@@ -1,6 +1,6 @@
-# Jira Shibboleth Connector
+= Jira Shibboleth Connector
 
-Ceci est un connecteur Jira permettant de déléguer l'autentification à Shibboleth. 
+Ceci est un connecteur Jira permettant de déléguer l'autentification applicative au [SSO Shibboleth](https://shibboleth.net). 
 
 ## Comment générer le jar ?
 
