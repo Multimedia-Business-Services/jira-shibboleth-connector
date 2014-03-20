@@ -9,13 +9,13 @@ Ceci est un connecteur Jira 6.x permettant de déléguer l'autentification appli
 ```bash
 atlas-package
 ```
-- L'archive générée se trouvera dans **target**.
+- L'archive générée se trouvera dans target.
 
 ## Comment installer le plugins dans Jira ?
 
 - Ajout du jar dans WEB-INF/lib (Plugin static).
 
-- Référencement de la classe d'authentification dans le fichier **seraph-config.xml** présent dans WEB-INF/classes :
+- Référencement de la classe d'authentification dans le fichier seraph-config.xml présent dans WEB-INF/classes :
 
 ```xml
 <authenticator class="com.orange.jira.login.ShibbolethAuthenticator"/>
@@ -43,13 +43,13 @@ atlas-package
 
 ### Configuration du SP Shibboleth
 
-- Pour que Shibboleth renseigne le **REMOTE_USER** dans le Request, il faut renseigner son mapping de champ dans le fichier **Shibbolet2.xml** : 
+- Pour que Shibboleth renseigne le REMOTE_USER dans le Request, il faut renseigner son mapping de champ dans le fichier Shibbolet2.xml : 
 
 ```xml
-<ApplicationDefaults ... **REMOTE_USER="uid"** ... >
+<ApplicationDefaults ... REMOTE_USER="uid" ... >
 ```
 
-- Pour rediriger l'utilisateur vers la déconnexion Shibboleth, il faut changer le contenu des fichiers **localLogout.html**, **partialLogout.html** et **globalLayout.html** :
+- Pour rediriger l'utilisateur vers la déconnexion Shibboleth, il faut changer le contenu des fichiers localLogout.html, partialLogout.html et globalLayout.html :
 
 ```html
 <html>
@@ -65,7 +65,7 @@ atlas-package
 
 ### Configuration du vhost Apache
 
-- Pour que Shibboleth renseigne le REMOTE_USER en Request, il faut lui donner le bon mapping dans le fichier Shibbolet2.xml : 
+- Voici les instructions a ajouter dans le fichier vhost de l'application : 
 
 ```xml
 ProxyRequests         Off
@@ -86,10 +86,8 @@ ProxyPassReverse      /           ajp://localhost:8009/
 
 ### Configuration du connector Tomcat
 
-- Pour que Tomcat ne détruise la valeur du REMOTE_USER envoyée par Apache, il faut modifier de renseigner l'attribut tomcatAuthentication dans le fichier server_head.xml : 
+- Pour que Tomcat ne détruise la valeur du REMOTE_USER envoyée par Apache, il faut renseigner tomcatAuthentication dans la description du connecteur AJP du server_head.xml : 
 
 ```xml
-<Connector port="8009"
-	maxThreads="800" connectionTimeout="60000" minSpareThreads="25" maxSpareThreads="75"
-    enableLookups="false" redirectPort="8443" protocol="AJP/1.3" URIEncoding="UTF-8" tomcatAuthentication="false" />
+<Connector port="8009" protocol="AJP/1.3" ... tomcatAuthentication="false" ... />
 ```
