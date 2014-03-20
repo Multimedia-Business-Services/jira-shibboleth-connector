@@ -1,13 +1,13 @@
 ## Comment générer le jar ?
 
-- Se rendre à la racine du projet et lancer la commande suivante
+- Se rendre à la racine du projet et lancer la commande suivante :
 
 ```bash
 atlas-package
 ```
 ## Comment installer le plugins ?
 
-- Ajout du jar dans WEB-INF/lib (Plugin static)
+- Ajout du jar dans WEB-INF/lib (Plugin static).
 - Référencement de la classe d'authentification dans le fichier seraph-config.xml présent dans WEB-INF/classes :
 
 ```xml
