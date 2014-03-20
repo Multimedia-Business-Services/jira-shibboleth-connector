@@ -12,15 +12,15 @@
   <classpathentry kind="var" path="M2_REPO/javax/media/jai-core/1.1.3/jai-core-1.1.3.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar" sourcepath="M2_REPO/javax/servlet/servlet-api/2.4/servlet-api-2.4-sources.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-  <classpathentry kind="var" path="M2_REPO/com/atlassian/jira/jira-api/6.2.1/jira-api-6.2.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/atlassian/jira/jira-api/6.1.7/jira-api-6.1.7.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/atlassian/annotations/atlassian-annotations/0.8.1/atlassian-annotations-0.8.1.jar" sourcepath="M2_REPO/com/atlassian/annotations/atlassian-annotations/0.8.1/atlassian-annotations-0.8.1-sources.jar">
     <attributes>
       <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/annotations/atlassian-annotations/0.8.1/atlassian-annotations-0.8.1-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/atlassian/ofbiz/entityengine-share/1.0.50/entityengine-share-1.0.50.jar" sourcepath="M2_REPO/com/atlassian/ofbiz/entityengine-share/1.0.50/entityengine-share-1.0.50-sources.jar">
+  <classpathentry kind="var" path="M2_REPO/com/atlassian/ofbiz/entityengine-share/1.0.40/entityengine-share-1.0.40.jar" sourcepath="M2_REPO/com/atlassian/ofbiz/entityengine-share/1.0.40/entityengine-share-1.0.40-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/ofbiz/entityengine-share/1.0.50/entityengine-share-1.0.50-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/ofbiz/entityengine-share/1.0.40/entityengine-share-1.0.40-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.16/log4j-1.2.16.jar" sourcepath="M2_REPO/log4j/log4j/1.2.16/log4j-1.2.16-sources.jar">
@@ -29,9 +29,9 @@
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.4.0/xercesImpl-2.4.0.jar" sourcepath="M2_REPO/xerces/xercesImpl/2.4.0/xercesImpl-2.4.0-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/atlassian/ofbiz/entityengine/1.0.50/entityengine-1.0.50.jar" sourcepath="M2_REPO/com/atlassian/ofbiz/entityengine/1.0.50/entityengine-1.0.50-sources.jar">
+  <classpathentry kind="var" path="M2_REPO/com/atlassian/ofbiz/entityengine/1.0.40/entityengine-1.0.40.jar" sourcepath="M2_REPO/com/atlassian/ofbiz/entityengine/1.0.40/entityengine-1.0.40-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/ofbiz/entityengine/1.0.50/entityengine-1.0.50-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/ofbiz/entityengine/1.0.40/entityengine-1.0.40-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/jta/jta/1.0.1/jta-1.0.1.jar"/>
@@ -70,7 +70,7 @@
       <attribute value="jar:file:/home/adminsi/.m2/repository/com/google/guava/guava/10.0.1/guava-10.0.1-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/jsr305/2.0.2/jsr305-2.0.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/jsr305/2.0.1/jsr305-2.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/opensymphony/webwork/1.4-atlassian-30/webwork-1.4-atlassian-30.jar" sourcepath="M2_REPO/opensymphony/webwork/1.4-atlassian-30/webwork-1.4-atlassian-30-sources.jar">
     <attributes>
       <attribute value="jar:file:/home/adminsi/.m2/repository/opensymphony/webwork/1.4-atlassian-30/webwork-1.4-atlassian-30-javadoc.jar!/" name="javadoc_location"/>
@@ -143,14 +143,9 @@
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/oro/oro/2.0.7/oro-2.0.7.jar" sourcepath="M2_REPO/oro/oro/2.0.7/oro-2.0.7-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/osworkflow/osworkflow/2.8.1/osworkflow-2.8.1.jar" sourcepath="M2_REPO/osworkflow/osworkflow/2.8.1/osworkflow-2.8.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/atlassian/cache/atlassian-cache-api/2.0.8/atlassian-cache-api-2.0.8.jar" sourcepath="M2_REPO/com/atlassian/cache/atlassian-cache-api/2.0.8/atlassian-cache-api-2.0.8-sources.jar">
+  <classpathentry kind="var" path="M2_REPO/com/atlassian/crowd/embedded-crowd-api/2.7.1-rc3/embedded-crowd-api-2.7.1-rc3.jar">
     <attributes>
-      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/cache/atlassian-cache-api/2.0.8/atlassian-cache-api-2.0.8-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/atlassian/crowd/embedded-crowd-api/2.8.0-OD-4/embedded-crowd-api-2.8.0-OD-4.jar">
-    <attributes>
-      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/crowd/embedded-crowd-api/2.8.0-OD-4/embedded-crowd-api-2.8.0-OD-4-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/crowd/embedded-crowd-api/2.7.1-rc3/embedded-crowd-api-2.7.1-rc3-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar" sourcepath="M2_REPO/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1-sources.jar">
@@ -165,9 +160,9 @@
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/jackson/jackson-core-asl/1.9.1/jackson-core-asl-1.9.1.jar" sourcepath="M2_REPO/org/codehaus/jackson/jackson-core-asl/1.9.1/jackson-core-asl-1.9.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/jackson/jackson-mapper-asl/1.9.1/jackson-mapper-asl-1.9.1.jar" sourcepath="M2_REPO/org/codehaus/jackson/jackson-mapper-asl/1.9.1/jackson-mapper-asl-1.9.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/atlassian/mail/atlassian-mail/2.5.0/atlassian-mail-2.5.0.jar" sourcepath="M2_REPO/com/atlassian/mail/atlassian-mail/2.5.0/atlassian-mail-2.5.0-sources.jar">
+  <classpathentry kind="var" path="M2_REPO/com/atlassian/mail/atlassian-mail/2.5.0-m7/atlassian-mail-2.5.0-m7.jar" sourcepath="M2_REPO/com/atlassian/mail/atlassian-mail/2.5.0-m7/atlassian-mail-2.5.0-m7-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/mail/atlassian-mail/2.5.0/atlassian-mail-2.5.0-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/mail/atlassian-mail/2.5.0-m7/atlassian-mail-2.5.0-m7-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/commons-beanutils/commons-beanutils/1.6.1/commons-beanutils-1.6.1.jar" sourcepath="M2_REPO/commons-beanutils/commons-beanutils/1.6.1/commons-beanutils-1.6.1-sources.jar">
@@ -195,9 +190,9 @@
       <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/threadlocal/atlassian-threadlocal/1.3/atlassian-threadlocal-1.3-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/atlassian/applinks/applinks-api/4.1.1/applinks-api-4.1.1.jar" sourcepath="M2_REPO/com/atlassian/applinks/applinks-api/4.1.1/applinks-api-4.1.1-sources.jar">
+  <classpathentry kind="var" path="M2_REPO/com/atlassian/applinks/applinks-api/4.0.9/applinks-api-4.0.9.jar" sourcepath="M2_REPO/com/atlassian/applinks/applinks-api/4.0.9/applinks-api-4.0.9-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/applinks/applinks-api/4.1.1/applinks-api-4.1.1-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/applinks/applinks-api/4.0.9/applinks-api-4.0.9-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/com/atlassian/velocity/htmlsafe/velocity-htmlsafe/1.2.1-m2/velocity-htmlsafe-1.2.1-m2.jar">
@@ -257,9 +252,9 @@
       <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/sal/sal-api/2.10.11/sal-api-2.10.11-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/atlassian/gadgets/atlassian-gadgets-api/3.3.2/atlassian-gadgets-api-3.3.2.jar">
+  <classpathentry kind="var" path="M2_REPO/com/atlassian/gadgets/atlassian-gadgets-api/3.2.2/atlassian-gadgets-api-3.2.2.jar">
     <attributes>
-      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/gadgets/atlassian-gadgets-api/3.3.2/atlassian-gadgets-api-3.3.2-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/home/adminsi/.m2/repository/com/atlassian/gadgets/atlassian-gadgets-api/3.2.2/atlassian-gadgets-api-3.2.2-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/com/atlassian/johnson/atlassian-johnson/1.1.2/atlassian-johnson-1.1.2.jar" sourcepath="M2_REPO/com/atlassian/johnson/atlassian-johnson/1.1.2/atlassian-johnson-1.1.2-sources.jar">

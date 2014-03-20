@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
   <name>jira-shibboleth.connector</name>
-  <comment>An authenticator custom for JIRA. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <comment>Comment installer le plugins ?
+
+* Ajout du jar dans WEB-INF/lib (Plugin static)
+* Référencement de la classe d&apos;authentification dans le fichier seraph-config.xml présent dans WEB-INF/classes :
+	
+	&lt;authenticator class=&quot;com.valiantys.atlassian.features.shibboleth.ShibbolethAuthenticator&quot;/&gt;
+
+* Référencement de l&apos;url absolue de déconnexion Shibboleth :
+	
+	&lt;param-name&gt;logout.url&lt;/param-name&gt;
+	&lt;param-value&gt;https://jira.dev/Shibboleth.sso/Logout&lt;/param-value&gt;. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>

@@ -1,4 +1,4 @@
-package com.valiantys.atlassian.features.shibboleth;
+package com.orange.jira.login;
 
 import java.security.Principal;
 import java.util.Arrays;
