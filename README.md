@@ -39,17 +39,17 @@ atlas-package
 <param-value>https://jira.dev/Shibboleth.sso/Logout</param-value>
 ```
 
-## Comment configurer Shibboleth / Apache / Tomcat ?
+## Comment configurer Shibboleth, Apache et Tomcat ?
 
 ### Configuration du SP Shibboleth
 
-- Pour que Shibboleth renseigne le REMOTE_USER dans le Request, il faut renseigner son mapping de champ dans le fichier Shibbolet2.xml : 
+- Pour que Shibboleth renseigne le REMOTE_USER dans le Request, il faut cobnfigurer son mapping de champ dans le fichier Shibbolet2.xml : 
 
 ```xml
 <ApplicationDefaults ... REMOTE_USER="uid" ... >
 ```
 
-- Pour rediriger l'utilisateur vers la déconnexion Shibboleth, il faut changer le contenu des fichiers localLogout.html, partialLogout.html et globalLayout.html :
+- Pour rediriger l'utilisateur vers l'url de déconnexion Shibboleth, il faut changer le contenu des fichiers localLogout.html, partialLogout.html et globalLayout.html :
 
 ```html
 <html>
@@ -65,7 +65,7 @@ atlas-package
 
 ### Configuration du vhost Apache
 
-- Voici les instructions a ajouter dans le fichier vhost de l'application : 
+- Voici les instructions à ajouter dans le fichier vhost de l'application : 
 
 ```xml
 ProxyRequests         Off
