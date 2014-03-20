@@ -20,7 +20,7 @@ atlas-package
 ```xml
 <authenticator class="com.orange.jira.login.ShibbolethAuthenticator"/>
 ```
-- Référencement des url relatives de login de Shibboleth :
+- Référencement des url relatives de login de Shibboleth dans le fichier seraph-config.xml :
 
 ```xml
 <param-name>login.url</param-name>
@@ -32,7 +32,7 @@ atlas-package
 <param-value>/Shibboleth.sso/Login?target=${originalurl}</param-value>
 ```
 
-- Référencement de l'url absolue de déconnexion Shibboleth :
+- Référencement de l'url absolue de déconnexion Shibboleth dans le fichier seraph-config.xml :
 
 ```xml
 <param-name>logout.url</param-name>
