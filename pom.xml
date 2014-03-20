@@ -13,7 +13,6 @@
 		<url>http://www.orange-business.com/fr/relation-client</url>
 	</organization>
 
-	<name>Connector Shibboleth for JIRA</name>
 	<packaging>atlassian-plugin</packaging>
 
 	<dependencies>
@@ -55,15 +54,8 @@
 		<jira.version>6.1.7</jira.version>
 		<amps.version>4.2.18</amps.version>
 	</properties>
-	<description>Comment installer le plugins ?
-
-* Ajout du jar dans WEB-INF/lib (Plugin static)
-* Référencement de la classe d'authentification dans le fichier seraph-config.xml présent dans WEB-INF/classes :
-	
-	&lt;authenticator class=&quot;com.valiantys.atlassian.features.shibboleth.ShibbolethAuthenticator&quot;/&gt;
-
-* Référencement de l'url absolue de déconnexion Shibboleth :
-	
-	&lt;param-name&gt;logout.url&lt;/param-name&gt;
-	&lt;param-value&gt;https://jira.dev/Shibboleth.sso/Logout&lt;/param-value&gt;</description>
+	<scm>
+		<url>http://git.si.mbs/si/jira-shibboleth-connector/tree/master</url>
+	</scm>
+	<name>Authentification shibboleth pour JIRA</name>
 </project>
