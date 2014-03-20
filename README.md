@@ -1,6 +1,6 @@
 # Jira Shibboleth Connector
 
-Ceci est un connecteur Jira permettant de déléguer l'autentification applicative au [SSO Shibboleth](https://shibboleth.net). 
+Ceci est un connecteur Jira 6.x permettant de déléguer l'autentification applicative au [SSO Shibboleth](https://shibboleth.net). 
 
 ## Comment générer le jar ?
 
@@ -9,13 +9,13 @@ Ceci est un connecteur Jira permettant de déléguer l'autentification applicati
 ```bash
 atlas-package
 ```
-- L'archive générée sera dans target.
+- L'archive générée se trouvera dans **target**.
 
 ## Comment installer le plugins dans Jira ?
 
 - Ajout du jar dans WEB-INF/lib (Plugin static).
 
-- Référencement de la classe d'authentification dans le fichier seraph-config.xml présent dans WEB-INF/classes :
+- Référencement de la classe d'authentification dans le fichier **seraph-config.xml** présent dans WEB-INF/classes :
 
 ```xml
 <authenticator class="com.orange.jira.login.ShibbolethAuthenticator"/>
@@ -43,10 +43,10 @@ atlas-package
 
 ### Configuration du SP Shibboleth
 
-- Pour que Shibboleth renseigne le REMOTE_USER dans le Request, il faut rensigner son mapping de champ dans le fichier **Shibbolet2.xml** : 
+- Pour que Shibboleth renseigne le **REMOTE_USER** dans le Request, il faut renseigner son mapping de champ dans le fichier **Shibbolet2.xml** : 
 
 ```xml
-<ApplicationDefaults ... REMOTE_USER="uid" ... >
+<ApplicationDefaults ... **REMOTE_USER="uid"** ... >
 ```
 
 - Pour rediriger l'utilisateur vers la déconnexion Shibboleth, il faut changer le contenu des fichiers **localLogout.html**, **partialLogout.html** et **globalLayout.html** :
