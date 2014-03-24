@@ -36,7 +36,7 @@ atlas-package
 
 ```xml
 <param-name>logout.url</param-name>
-<param-value>https://jira.dev/Shibboleth.sso/Logout</param-value>
+<param-value>https://jira/Shibboleth.sso/Logout</param-value>
 ```
 
 ## Comment configurer Shibboleth, Apache et Tomcat ?
@@ -55,7 +55,7 @@ atlas-package
 <html>
         <head>
                 <script type="text/javascript">
-                         window.location="https://sso-itg.si.mbs/idp/decoidp.jsp?url=https://jira.dev";
+                         window.location="https://shibboleth/idp/decoidp.jsp?url=https://jira";
                 </script>
         </head>
         <body>
