@@ -1,4 +1,4 @@
-# Jira Shibboleth Connector
+# Remote User HTTP Authenticator
 
 Ceci est un connecteur Jira 6.x permettant de déléguer l'autentification applicative au [SSO Shibboleth](https://shibboleth.net). 
 
