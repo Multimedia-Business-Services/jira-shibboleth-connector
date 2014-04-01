@@ -1,6 +1,6 @@
 # Remote User HTTP Authenticator
 
-Ceci est un connecteur Jira 6.x permettant de déléguer l'autentification applicative au [SSO Shibboleth](https://shibboleth.net). 
+Ceci est un connecteur Jira 6.x permettant de déléguer l'authentification applicative au [SSO Shibboleth](https://shibboleth.net). 
 
 ## Comment générer le jar ?
 
@@ -86,7 +86,7 @@ ProxyPassReverse      /           ajp://localhost:8009/
 
 ### Configuration du connector Tomcat
 
-- Pour que Tomcat ne détruise la valeur du REMOTE_USER envoyée par Apache, il faut renseigner tomcatAuthentication dans la description du connecteur AJP du server_head.xml : 
+- Pour que Tomcat ne détruise pas la valeur du REMOTE_USER envoyée par Apache, il faut renseigner tomcatAuthentication dans la description du connecteur AJP du server_head.xml : 
 
 ```xml
 <Connector port="8009" protocol="AJP/1.3" ... tomcatAuthentication="false" ... />
