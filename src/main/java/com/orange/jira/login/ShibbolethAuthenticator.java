@@ -42,7 +42,10 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 		} else {
 			// User is already logged in. We check whether a connection has already been detected by JIRA.
 			if (this.isFirstLogin(request.getRemoteUser())) {
-				// If no login has been yet. It is either the very first connection of our user, or it is a SSO user
+				if (log.isDebugEnabled()) {
+					log.debug("User " + username + " is already logged, but no login has been recorded yet. Trying group update");
+				}
+				// If no login has been yet it is most probably a SSO user
 				// for which login count is not updated. We try to update user details via the directory configuration.
 				tryToUpdateGroupMembership(username);
 			}
@@ -104,21 +107,43 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 	}
 
 	private void tryToUpdateGroupMembership(String username) {
+		boolean dbg = log.isDebugEnabled();
+		boolean trace = log.isTraceEnabled();
 		ApplicationUser user = ComponentAccessor.getUserManager().getUserByName(username);
 		if (user != null) {
+			if (trace) {
+				log.trace("user has been found");
+			}
 			DirectoryManager directoryManager = ComponentAccessor.getComponentOfType(DirectoryManager.class);
 			if (directoryManager != null) {
+				if (trace) {
+					log.trace("Directory manager has been acquired");
+				}
 				try {
 					Directory directory = directoryManager.findDirectoryById(user.getDirectoryId());
 					DirectoryInstanceLoader directoryInstanceLoader =  ComponentAccessor.getComponentOfType(DirectoryInstanceLoader.class);
-					if (directoryInstanceLoader != null) {
+					if (directory != null && directoryInstanceLoader != null) {
+						if (trace) {
+							log.trace("DirectoryInstanceLoader has been acquired");
+						}
 						RemoteDirectory remoteDirectory = directoryInstanceLoader.getDirectory(directory);
 						if (remoteDirectory instanceof DelegatedAuthenticationDirectory) {
+							if (trace) {
+								log.trace("Directory is of correct type. Performing update");
+							}
 							((DelegatedAuthenticationDirectory) remoteDirectory).addOrUpdateLdapUser(username);
 							// Finally we record a successful login so as to update the groups only once per user.
+							if (trace) {
+								log.trace("Adding login count in the name of user " + username);
+							}
 							LoginStore loginStore = ComponentAccessor.getComponentOfType(LoginStore.class);
 							loginStore.recordLoginAttempt(user.getDirectoryUser(), true);
+							if (dbg) {
+								log.debug("User " + username + " has been updated given its directory's configuration");
+							}
 						}
+					} else {
+						log.warn("The user directory could not be fetched. Aborting group update");
 					}
 				} catch (DirectoryNotFoundException e) {
 					log.error("Directory with ID " + user.getDirectoryId() + " has not been found"); // Should not happen since user is supposed to be already logged in
