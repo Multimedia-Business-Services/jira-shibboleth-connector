@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.orange.jira</groupId>
 	<artifactId>jira-shibboleth.connector</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 
 	<organization>
 		<name>Orange Business Services</name>
@@ -22,6 +22,14 @@
 			<version>${jira.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.atlassian.jira</groupId>
+			<artifactId>jira-core</artifactId>
+			<version>${jira.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>com.atlassian.seraph</groupId>
 			<artifactId>atlassian-seraph</artifactId>
@@ -44,15 +52,15 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 	<properties>
 		<jira.version>6.1.7</jira.version>
-		<amps.version>4.2.18</amps.version>
+		<amps.version>6.2.6</amps.version>
 	</properties>
 	<scm>
 		<url>http://git.si.mbs/si/jira-shibboleth-connector/tree/master</url>
