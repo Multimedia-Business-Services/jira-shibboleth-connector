@@ -1,18 +1,19 @@
 package com.orange.jira.login;
 
+import com.atlassian.crowd.directory.DbCachingRemoteDirectory;
 import com.atlassian.crowd.directory.DelegatedAuthenticationDirectory;
 import com.atlassian.crowd.directory.RemoteDirectory;
 import com.atlassian.crowd.directory.loader.DirectoryInstanceLoader;
 import com.atlassian.crowd.embedded.api.Directory;
-import com.atlassian.crowd.exception.DirectoryNotFoundException;
-import com.atlassian.crowd.exception.FailedAuthenticationException;
-import com.atlassian.crowd.exception.UserNotFoundException;
+import com.atlassian.crowd.embedded.api.Group;
+import com.atlassian.crowd.exception.*;
 import com.atlassian.crowd.exception.runtime.CommunicationException;
 import com.atlassian.crowd.exception.runtime.OperationFailedException;
 import com.atlassian.crowd.manager.directory.DirectoryManager;
 import com.atlassian.jira.bc.security.login.LoginInfo;
 import com.atlassian.jira.bc.security.login.LoginService;
 import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.security.groups.GroupManager;
 import com.atlassian.jira.security.login.LoginStore;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.seraph.auth.AuthenticationErrorType;
@@ -41,7 +42,7 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 			}
 		} else {
 			// User is already logged in. We check whether a connection has already been detected by JIRA.
-			if (this.isFirstLogin(request.getRemoteUser())) {
+			if (this.isFirstLogin(username)) {
 				if (log.isDebugEnabled()) {
 					log.debug("User " + username + " is already logged, but no login has been recorded yet. Trying group update");
 				}
@@ -121,26 +122,39 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 				}
 				try {
 					Directory directory = directoryManager.findDirectoryById(user.getDirectoryId());
-					DirectoryInstanceLoader directoryInstanceLoader =  ComponentAccessor.getComponentOfType(DirectoryInstanceLoader.class);
-					if (directory != null && directoryInstanceLoader != null) {
+					if (directory != null) {
 						if (trace) {
-							log.trace("DirectoryInstanceLoader has been acquired");
+							log.trace("Directory has been found");
 						}
-						RemoteDirectory remoteDirectory = directoryInstanceLoader.getDirectory(directory);
-						if (remoteDirectory instanceof DelegatedAuthenticationDirectory) {
-							if (trace) {
-								log.trace("Directory is of correct type. Performing update");
+						String groups = (directory.getAttributes() != null) ? directory.getAttributes().get("autoAddGroups") : null;
+						if (dbg) {
+							log.trace("Auto add Groups for the directory are : " + groups != null ? groups : "null");
+						}
+						if (groups != null) {
+							for (String groupName : groups.split("\\|")) {
+								Group group = ComponentAccessor.getGroupManager().getGroup(groupName);
+								if (group != null) {
+									if (trace) {
+										log.trace("Group " + groupName + " does exist");
+									}
+									try {
+										ComponentAccessor.getGroupManager().addUserToGroup(user, group);
+									} catch (GroupNotFoundException e) {
+										log.error(e);
+									} catch (OperationNotPermittedException e) {
+										log.error(e);
+									}
+								} else {
+									if (trace) {
+										log.trace("Group " + groupName + " does NOT exist");
+									}
+								}
 							}
-							((DelegatedAuthenticationDirectory) remoteDirectory).addOrUpdateLdapUser(username);
-							// Finally we record a successful login so as to update the groups only once per user.
-							if (trace) {
-								log.trace("Adding login count in the name of user " + username);
-							}
-							LoginStore loginStore = ComponentAccessor.getComponentOfType(LoginStore.class);
-							loginStore.recordLoginAttempt(user.getDirectoryUser(), true);
-							if (dbg) {
-								log.debug("User " + username + " has been updated given its directory's configuration");
-							}
+						}
+						LoginStore loginStore = ComponentAccessor.getComponentOfType(LoginStore.class);
+						loginStore.recordLoginAttempt(user, true);
+						if (dbg) {
+							log.debug("User " + username + " has been updated given its directory's configuration");
 						}
 					} else {
 						log.warn("The user directory could not be fetched. Aborting group update");

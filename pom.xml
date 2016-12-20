@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.orange.jira</groupId>
 	<artifactId>jira-shibboleth.connector</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.0-SNAPSHOT</version>
 
 	<organization>
 		<name>Orange Business Services</name>
@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>com.atlassian.seraph</groupId>
 			<artifactId>atlassian-seraph</artifactId>
-			<version>2.6.0</version>
+			<version>3.1.1</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -59,7 +59,7 @@
 		</plugins>
 	</build>
 	<properties>
-		<jira.version>6.1.7</jira.version>
+		<jira.version>7.2.5</jira.version>
 		<amps.version>6.2.6</amps.version>
 	</properties>
 	<scm>
