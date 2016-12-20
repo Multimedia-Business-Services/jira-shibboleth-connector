@@ -109,44 +109,27 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 
 	private void tryToUpdateGroupMembership(String username) {
 		boolean dbg = log.isDebugEnabled();
-		boolean trace = log.isTraceEnabled();
 		ApplicationUser user = ComponentAccessor.getUserManager().getUserByName(username);
 		if (user != null) {
-			if (trace) {
-				log.trace("user has been found");
-			}
 			DirectoryManager directoryManager = ComponentAccessor.getComponentOfType(DirectoryManager.class);
 			if (directoryManager != null) {
-				if (trace) {
-					log.trace("Directory manager has been acquired");
-				}
 				try {
 					Directory directory = directoryManager.findDirectoryById(user.getDirectoryId());
 					if (directory != null) {
-						if (trace) {
-							log.trace("Directory has been found");
-						}
 						String groups = (directory.getAttributes() != null) ? directory.getAttributes().get("autoAddGroups") : null;
 						if (dbg) {
-							log.trace("Auto add Groups for the directory are : " + groups != null ? groups : "null");
+							log.debug("Auto add Groups for the directory are : " + groups != null ? groups : "null");
 						}
 						if (groups != null) {
 							for (String groupName : groups.split("\\|")) {
 								Group group = ComponentAccessor.getGroupManager().getGroup(groupName);
 								if (group != null) {
-									if (trace) {
-										log.trace("Group " + groupName + " does exist");
-									}
 									try {
 										ComponentAccessor.getGroupManager().addUserToGroup(user, group);
 									} catch (GroupNotFoundException e) {
 										log.error(e);
 									} catch (OperationNotPermittedException e) {
 										log.error(e);
-									}
-								} else {
-									if (trace) {
-										log.trace("Group " + groupName + " does NOT exist");
 									}
 								}
 							}
