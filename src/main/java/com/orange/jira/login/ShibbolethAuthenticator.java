@@ -1,11 +1,8 @@
 package com.orange.jira.login;
 
-import com.atlassian.crowd.directory.DbCachingRemoteDirectory;
-import com.atlassian.crowd.directory.DelegatedAuthenticationDirectory;
-import com.atlassian.crowd.directory.RemoteDirectory;
-import com.atlassian.crowd.directory.loader.DirectoryInstanceLoader;
 import com.atlassian.crowd.embedded.api.Directory;
 import com.atlassian.crowd.embedded.api.Group;
+import com.atlassian.crowd.embedded.spi.UserDao;
 import com.atlassian.crowd.exception.*;
 import com.atlassian.crowd.exception.runtime.CommunicationException;
 import com.atlassian.crowd.exception.runtime.OperationFailedException;
@@ -13,24 +10,33 @@ import com.atlassian.crowd.manager.directory.DirectoryManager;
 import com.atlassian.jira.bc.security.login.LoginInfo;
 import com.atlassian.jira.bc.security.login.LoginService;
 import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.jira.security.groups.GroupManager;
-import com.atlassian.jira.security.login.LoginStore;
+import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.seraph.auth.AuthenticationErrorType;
 import com.atlassian.seraph.auth.AuthenticatorException;
 import com.atlassian.seraph.auth.DefaultAuthenticator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.ofbiz.core.entity.GenericValue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ShibbolethAuthenticator extends DefaultAuthenticator {
 
 	private final Logger log = Logger.getLogger(ShibbolethAuthenticator.class);
+
+	private final static String USER_ATR_CRITERIA = "UserAttribute";
+	private final static String USER_ID = "userId";
+	private final static String DIRECTORY_ID = "directoryId";
+	private final static String NAME = "name";
+	private final static String VALUE = "value";
+	private final static String AUTO_GROUPS_ATTR = "autoGroupsAdded";
 
 	@Override
 	public Principal getUser(HttpServletRequest request, HttpServletResponse response) {
@@ -42,14 +48,12 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 			}
 		} else {
 			// User is already logged in. We check whether a connection has already been detected by JIRA.
-			if (this.isFirstLogin(username)) {
-				if (log.isDebugEnabled()) {
-					log.debug("User " + username + " is already logged, but no login has been recorded yet. Trying group update");
-				}
-				// If no login has been yet it is most probably a SSO user
-				// for which login count is not updated. We try to update user details via the directory configuration.
-				tryToUpdateGroupMembership(username);
+			if (log.isDebugEnabled()) {
+				log.debug("User " + username + " is already logged in. We check if default groups needs to be added");
 			}
+			// If no login has been yet it is most probably a SSO user
+			// for which login count is not updated. We try to update user details via the directory configuration.
+			tryToUpdateGroupMembership(username);
 		}
 		return (Principal) request.getSession().getAttribute(LOGGED_IN_KEY);
 	}
@@ -89,28 +93,20 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 	private final static long serialVersionUID = 1492747625496115491L;
 	private final static List<String> SKIPPED_URLS = Arrays.asList("security-tokens", "/Shibboleth.sso/Logout", "/logout");
 
-	private boolean isFirstLogin(String username) {
-		if (StringUtils.isEmpty(username)) {
-			return false;
-		}
-		LoginService loginService = ComponentAccessor.getComponentOfType(LoginService.class);
-		if (loginService != null) {
-			LoginInfo info = loginService.getLoginInfo(username);
-			if (log.isDebugEnabled() && info != null) {
-				log.debug("User " + username + " connection count is at : " + info.getLoginCount());
-			}
-			return info == null || info.getLoginCount() == null || info.getLoginCount() == 0;
-		} else {
-			log.error("LoginService is not available");
-		}
-
-		return false;
-	}
-
 	private void tryToUpdateGroupMembership(String username) {
 		boolean dbg = log.isDebugEnabled();
 		ApplicationUser user = ComponentAccessor.getUserManager().getUserByName(username);
 		if (user != null) {
+			Map<String, Object> criteria = new HashMap<>();
+			criteria.put(USER_ID, user.getId());
+			criteria.put(NAME, AUTO_GROUPS_ATTR);
+			List<GenericValue> userAttributes = ComponentAccessor.getComponentOfType(OfBizDelegator.class).findByAnd(USER_ATR_CRITERIA, criteria);
+			if (userAttributes != null && userAttributes.size() > 0) {
+				if (dbg) {
+					log.debug("User " + username + " has already had the default groups assigned");
+				}
+				return;
+			}
 			DirectoryManager directoryManager = ComponentAccessor.getComponentOfType(DirectoryManager.class);
 			if (directoryManager != null) {
 				try {
@@ -134,8 +130,9 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 								}
 							}
 						}
-						LoginStore loginStore = ComponentAccessor.getComponentOfType(LoginStore.class);
-						loginStore.recordLoginAttempt(user, true);
+
+						this.updateUserAttributes(user);
+
 						if (dbg) {
 							log.debug("User " + username + " has been updated given its directory's configuration");
 						}
@@ -156,5 +153,16 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 		} else {
 			log.warn("Unable to find user for name : " + username + " eventhough he is already logged in !");
 		}
+	}
+
+	private void updateUserAttributes(ApplicationUser user) {
+		Map<String, Object> criteria = new HashMap<>();
+		criteria.put(USER_ID, user.getId());
+		Map<String, Object> attributeData = new HashMap<>();
+		attributeData.put(DIRECTORY_ID, user.getDirectoryId());
+		attributeData.put(USER_ID, user.getId());
+		attributeData.put(NAME, AUTO_GROUPS_ATTR);
+		attributeData.put(VALUE, true);
+		ComponentAccessor.getComponentOfType(OfBizDelegator.class).createValue(USER_ATR_CRITERIA, attributeData);
 	}
 }
