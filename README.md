@@ -1,6 +1,6 @@
 # Remote User HTTP Authenticator
 
-Ceci est un connecteur Jira 6.x permettant de déléguer l'authentification applicative au [SSO Shibboleth](https://shibboleth.net). 
+Ceci est un connecteur Jira 7.x permettant de déléguer l'authentification applicative au [SSO Shibboleth](https://shibboleth.net). 
 
 ## Comment générer le jar ?
 
