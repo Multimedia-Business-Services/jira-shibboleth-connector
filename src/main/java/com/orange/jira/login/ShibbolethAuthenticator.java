@@ -2,30 +2,24 @@ package com.orange.jira.login;
 
 import com.atlassian.crowd.embedded.api.Directory;
 import com.atlassian.crowd.embedded.api.Group;
-import com.atlassian.crowd.embedded.spi.UserDao;
+import com.atlassian.crowd.embedded.api.UserWithAttributes;
 import com.atlassian.crowd.exception.*;
 import com.atlassian.crowd.exception.runtime.CommunicationException;
 import com.atlassian.crowd.exception.runtime.OperationFailedException;
 import com.atlassian.crowd.manager.directory.DirectoryManager;
-import com.atlassian.jira.bc.security.login.LoginInfo;
-import com.atlassian.jira.bc.security.login.LoginService;
 import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.jira.ofbiz.OfBizDelegator;
+import com.atlassian.jira.security.login.LoginStore;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.seraph.auth.AuthenticationErrorType;
 import com.atlassian.seraph.auth.AuthenticatorException;
 import com.atlassian.seraph.auth.DefaultAuthenticator;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.ofbiz.core.entity.GenericValue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ShibbolethAuthenticator extends DefaultAuthenticator {
 
@@ -97,11 +91,8 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 		boolean dbg = log.isDebugEnabled();
 		ApplicationUser user = ComponentAccessor.getUserManager().getUserByName(username);
 		if (user != null) {
-			Map<String, Object> criteria = new HashMap<>();
-			criteria.put(USER_ID, user.getId());
-			criteria.put(NAME, AUTO_GROUPS_ATTR);
-			List<GenericValue> userAttributes = ComponentAccessor.getComponentOfType(OfBizDelegator.class).findByAnd(USER_ATR_CRITERIA, criteria);
-			if (userAttributes != null && userAttributes.size() > 0) {
+			UserWithAttributes userAttributes = ComponentAccessor.getCrowdService().getUserWithAttributes(username);
+			if (userAttributes != null && userAttributes.getValue(AUTO_GROUPS_ATTR) != null) {
 				if (dbg) {
 					log.debug("User " + username + " has already had the default groups assigned");
 				}
@@ -156,13 +147,12 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 	}
 
 	private void updateUserAttributes(ApplicationUser user) {
-		Map<String, Object> criteria = new HashMap<>();
-		criteria.put(USER_ID, user.getId());
-		Map<String, Object> attributeData = new HashMap<>();
-		attributeData.put(DIRECTORY_ID, user.getDirectoryId());
-		attributeData.put(USER_ID, user.getId());
-		attributeData.put(NAME, AUTO_GROUPS_ATTR);
-		attributeData.put(VALUE, true);
-		ComponentAccessor.getComponentOfType(OfBizDelegator.class).createValue(USER_ATR_CRITERIA, attributeData);
+		LoginStore loginStore = ComponentAccessor.getComponentOfType(LoginStore.class);
+		loginStore.recordLoginAttempt(user, true);
+		try {
+			ComponentAccessor.getCrowdService().setUserAttribute(user.getDirectoryUser(), AUTO_GROUPS_ATTR, "true");
+		} catch (OperationNotPermittedException e) {
+			log.warn("Could not set autoGroupsAdded value to user " + user.getName());
+		}
 	}
 }
