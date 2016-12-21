@@ -1,30 +1,53 @@
 package com.orange.jira.login;
 
+import com.atlassian.crowd.embedded.api.Directory;
+import com.atlassian.crowd.embedded.api.Group;
+import com.atlassian.crowd.embedded.api.UserWithAttributes;
+import com.atlassian.crowd.exception.*;
+import com.atlassian.crowd.exception.runtime.CommunicationException;
+import com.atlassian.crowd.exception.runtime.OperationFailedException;
+import com.atlassian.crowd.manager.directory.DirectoryManager;
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.security.login.LoginStore;
+import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.seraph.auth.AuthenticationErrorType;
+import com.atlassian.seraph.auth.AuthenticatorException;
+import com.atlassian.seraph.auth.DefaultAuthenticator;
+import org.apache.log4j.Logger;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.atlassian.crowd.exception.FailedAuthenticationException;
-import com.atlassian.crowd.exception.runtime.CommunicationException;
-import com.atlassian.crowd.exception.runtime.OperationFailedException;
-import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.seraph.auth.AuthenticationErrorType;
-import com.atlassian.seraph.auth.AuthenticatorException;
-import com.atlassian.seraph.auth.DefaultAuthenticator;
-
 public class ShibbolethAuthenticator extends DefaultAuthenticator {
+
+	private final Logger log = Logger.getLogger(ShibbolethAuthenticator.class);
+
+	private final static String USER_ATR_CRITERIA = "UserAttribute";
+	private final static String USER_ID = "userId";
+	private final static String DIRECTORY_ID = "directoryId";
+	private final static String NAME = "name";
+	private final static String VALUE = "value";
+	private final static String AUTO_GROUPS_ATTR = "autoGroupsAdded";
 
 	@Override
 	public Principal getUser(HttpServletRequest request, HttpServletResponse response) {
+		String username = request.getRemoteUser();
 		if (!userIsAlreadyLogged(request) && !urlIsSkipped(request)) {
-			String username = request.getRemoteUser();
 			if (username != null) {
 				Principal user = getUser(username);
 				putPrincipalInSessionContext(request, user);
 			}
+		} else {
+			// User is already logged in. We check whether a connection has already been detected by JIRA.
+			if (log.isDebugEnabled()) {
+				log.debug("User " + username + " is already logged in. We check if default groups needs to be added");
+			}
+			// If no login has been yet it is most probably a SSO user
+			// for which login count is not updated. We try to update user details via the directory configuration.
+			tryToUpdateGroupMembership(username);
 		}
 		return (Principal) request.getSession().getAttribute(LOGGED_IN_KEY);
 	}
@@ -63,4 +86,73 @@ public class ShibbolethAuthenticator extends DefaultAuthenticator {
 
 	private final static long serialVersionUID = 1492747625496115491L;
 	private final static List<String> SKIPPED_URLS = Arrays.asList("security-tokens", "/Shibboleth.sso/Logout", "/logout");
+
+	private void tryToUpdateGroupMembership(String username) {
+		boolean dbg = log.isDebugEnabled();
+		ApplicationUser user = ComponentAccessor.getUserManager().getUserByName(username);
+		if (user != null) {
+			UserWithAttributes userAttributes = ComponentAccessor.getCrowdService().getUserWithAttributes(username);
+			if (userAttributes != null && userAttributes.getValue(AUTO_GROUPS_ATTR) != null) {
+				if (dbg) {
+					log.debug("User " + username + " has already had the default groups assigned");
+				}
+				return;
+			}
+			DirectoryManager directoryManager = ComponentAccessor.getComponentOfType(DirectoryManager.class);
+			if (directoryManager != null) {
+				try {
+					Directory directory = directoryManager.findDirectoryById(user.getDirectoryId());
+					if (directory != null) {
+						String groups = (directory.getAttributes() != null) ? directory.getAttributes().get("autoAddGroups") : null;
+						if (dbg) {
+							log.debug("Auto add Groups for the directory are : " + groups != null ? groups : "null");
+						}
+						if (groups != null) {
+							for (String groupName : groups.split("\\|")) {
+								Group group = ComponentAccessor.getGroupManager().getGroup(groupName);
+								if (group != null) {
+									try {
+										ComponentAccessor.getGroupManager().addUserToGroup(user, group);
+									} catch (GroupNotFoundException e) {
+										log.error(e);
+									} catch (OperationNotPermittedException e) {
+										log.error(e);
+									}
+								}
+							}
+						}
+
+						this.updateUserAttributes(user);
+
+						if (dbg) {
+							log.debug("User " + username + " has been updated given its directory's configuration");
+						}
+					} else {
+						log.warn("The user directory could not be fetched. Aborting group update");
+					}
+				} catch (DirectoryNotFoundException e) {
+					log.error("Directory with ID " + user.getDirectoryId() + " has not been found"); // Should not happen since user is supposed to be already logged in
+				} catch (UserNotFoundException e) {
+					// Should not happen. ALl checks have been made previously
+					log.error("UserNotFoundException detected !", e); // Should not happen since user is supposed to be already logged in
+				} catch (com.atlassian.crowd.exception.OperationFailedException e) {
+					log.warn("Could not update user details for " + username, e);
+				}
+			} else {
+				log.error("Directory Manager is not available : we cannot proceed with group assignment");
+			}
+		} else {
+			log.warn("Unable to find user for name : " + username + " eventhough he is already logged in !");
+		}
+	}
+
+	private void updateUserAttributes(ApplicationUser user) {
+		LoginStore loginStore = ComponentAccessor.getComponentOfType(LoginStore.class);
+		loginStore.recordLoginAttempt(user, true);
+		try {
+			ComponentAccessor.getCrowdService().setUserAttribute(user.getDirectoryUser(), AUTO_GROUPS_ATTR, "true");
+		} catch (OperationNotPermittedException e) {
+			log.warn("Could not set autoGroupsAdded value to user " + user.getName());
+		}
+	}
 }
